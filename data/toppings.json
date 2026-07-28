@@ -1,0 +1,7 @@
+{
+    "Powered Sugar": {"price": 0.5, "stock": 40},
+    "Sprinkles": {"price": 0.5, "stock": 30},
+    "Chopped Nuts": {"price": 1, "stock": 10},
+    "Crunched Oreos": {"price": 2, "stock": 20},
+    "Chocolate Chips": {"price": 2, "stock": 20}
+}
