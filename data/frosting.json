@@ -1,0 +1,7 @@
+{
+    "Buttercream":{"price": 1.5},
+    "Chocolate":{"price": 1.5},
+    "Strawberry":{"price": 2},
+    "Mint": {"price": 2},
+    "Blueberry":{"price": 2}
+}
