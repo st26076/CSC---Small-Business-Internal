@@ -1,0 +1,7 @@
+{
+    "Vanilla": {"price": 2.5, "stock": 25},
+    "Chocolate": {"price": 3, "stock": 25},
+    "Peanut Butter": {"price": 3, "stock": 25},
+    "Caramel": {"price": 3.5, "stock": 25},
+    "Red Velvet": {"price": 4, "stock": 25}
+}
