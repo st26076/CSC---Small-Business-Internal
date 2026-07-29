@@ -1,0 +1,27 @@
+header {
+    position: relative;
+    height: 375px;
+    overflow: hidden;
+    margin: none;
+}
+
+.main-img {
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.main-text {
+    position: absolute;
+    top: 31%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    font-size: 75px;
+    color: white;
+    text-shadow: 2px 2px 5px black, 2px 2px 10px pink;
+}
+
+nav {
+    background-color: #F4AED5;
+}
