@@ -1,4 +1,6 @@
-
+body {
+    margin: none;
+}
 
 .layout {
     display: flex;
@@ -11,3 +13,4 @@
     width: auto;
     margin-right: 20px;
 }
+
