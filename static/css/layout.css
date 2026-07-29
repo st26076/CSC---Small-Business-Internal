@@ -1,0 +1,13 @@
+
+
+.layout {
+    display: flex;
+    align-items: center;
+    gap: 150px;
+}
+
+.about-image {
+    height: 250px;
+    width: auto;
+    margin-right: 20px;
+}
