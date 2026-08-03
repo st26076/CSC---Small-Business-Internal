@@ -3,6 +3,44 @@
 {% block title %}Home - Unique Cookies{% endblock %}
 
 {% block content %}
-    <h1>Testing Successful</h1>
+    <div class="layout">
+        <div>
+            <h2>Cookie Base:</h2>
+            <ul>
+                {% for cookie, details in cookies.items() %}
+                <li>{{ cookie }} - ${{ details['price'] }} (Stock: {{ details['stock'] }})</li>
+                {% endfor %}
+            </ul>
+            <form action="{{ url_for('add_to_cart') }}" method="post">
+                <fieldset>
+                    <legend for="cookie">Select Cookie</legend>
+                    <select name="cookie" id="cookie">
+                        {% for cookie, details in cookies.items() %}
+                        <option value="{{ cookie }}">{{ cookie }} - ${{ details['price'] }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Add to cart</button>
+                </fieldset>
+            </form>
+        </div>
 
+        <div>
+            <h2>Frosting Flavour:</h2>
+            <ul>
+                {% for frosting, details in frosting.items() %}
+                <li>{{ frosting }} - ${{ details['price'] }}</li>
+                {% endfor %}
+            </ul>
+            <form action="{{ url_for('add_to_cart') }}" method="post">
+                <fieldset>
+                    <legend for="frosting">Select Frosting</legend>
+                    <select name="frosting" id="frosting">
+                        {% for frosting, details in frosting.items() %}
+                        <option value="{{ frosting }}">{{ frosting }} - ${{ details['price'] }}</option>
+                        {% endfor %}
+                    </select>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 {% endblock %}
