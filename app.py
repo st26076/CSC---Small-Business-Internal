@@ -25,7 +25,9 @@ def initialise_database():
 @app.route('/')
 def index():
     cookies, frostings, toppings = load_data()
-    return render_template('index.html', cookies=cookies, frostings=frostings, toppings=toppings)
+    selected_toppings = session.get('selected_toppings')
+    cart = session.get('cart', [])
+    return render_template('index.html', cookies=cookies, frostings=frostings, toppings=toppings, selected_toppings=selected_toppings, cart=cart)
 
 def load_data():
     try:
@@ -40,83 +42,44 @@ def load_data():
         print(f"Error loading data: {e}")
     return {}, {}, {}
 
-@app.route('/cookie_to_cart', methods=['POST'])
-def cookie_to_cart():
+@app.route('/cookie_item', methods=['POST'])
+def cookie_item():
     cookie = request.form['cookie']
-    cookies, _, _ = load_data
+    frosting = request.form['frosting']
+    selected_toppings = request.form.getlist('toppings')
+    cookies, frostings, toppings = load_data()
     cart = session.get('cart', {})
 
     if cookie not in cookies:
         flash("Invalid cookie selected")
         return redirect(url_for('index'))
-
-    if cookie in cart:
-        cart[cookie]
-
-    else:
-        cart[cookie] = {
-            'price': cookies[cookie]['price']
-        }
-
-    session['cart'] = cart
-    session.modified = True
-    flash(f"{cookie} added to cart")
-    return redirect(url_for('index'))
-
-
-@app.route('/frosting_to_cart', methods=['POST'])
-def frosting_to_cart():
-    frosting = request.form['frosting']
-    _, frostings, _ = load_data
-    cart = session.get('cart', {})
-
     if frosting not in frostings:
         flash("Invalid frosting selected")
         return redirect(url_for('index'))
-
-    if frosting in cart:
-        cart[frosting]
-
-    else:
-        cart[frosting] = {
-            'price': frostings[frosting]['price']
-        }
-
-    session['cart'] = cart
-    session.modified = True
-    flash(f"{frosting} added to cart")
-    return redirect(url_for('index'))
-
-@app.route('/toppings_to_cart', methods=['POST'])
-def toppings_to_cart():
-    toppings_to_cart = {}
-    toppings = load_data()
-
-    selected_keys = request.form.getlist('toppings')
-
-    for topping in selected_keys:
-        if topping in toppings:
-            toppings_to_cart[topping] = {
-                'price': toppings[topping]['price']
-            }
-
-    if not selected_keys:
+    if selected_toppings not in toppings:
             flash("Invalid toppings selected")
             return redirect(url_for('index'))
 
-    if topping in toppings_to_cart:
-            toppings_to_cart[topping]
 
-    else: toppings_to_cart[topping] = {
-            'price': toppings[topping]['price']
-        }
+    total_price = cookies[cookie]['price']
+    total_price += frostings[frosting]['price']
+    for topping in selected_toppings:
+        total_price += toppings[topping]['price']
 
-    session['toppings_to_cart'] = toppings_to_cart
+    cookie_item = {
+        "cookie": cookie,
+        "frosting": frosting,
+        "selected_toppings": selected_toppings,
+        "price": total_price
+    }
+
+    cart.append(cookie_item)
+    session['cart'] = cart
     session.modified = True
-    flash(f"{topping}(s) added to cart")
+    flash(f"Your Unique Cookie, {cookie_item}, has been added to cart")
     return redirect(url_for('index'))
 
-    
+
 @app.route('/about')
 def about():
     return render_template('about.html')
