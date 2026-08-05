@@ -3,11 +3,10 @@
 {% block title %}Home - Unique Cookies{% endblock %}
 
 {% block content %}
-    <form>
+    <form action="{{ url_for('cookie_item') }}" method="post">
         <div class="layout">
             <div>
                 <h2>Cookie Base:</h2>
-                <form action="{{ url_for('cookie_to_cart') }}" method="post">
                     <fieldset>
                         <legend for="cookie">Select Cookie:</legend>
                         <select name="cookie" id="cookie">
@@ -21,7 +20,6 @@
 
             <div>
                 <h2>Frosting Flavour:</h2>
-                <form action="{{ url_for('frosting_to_cart') }}" method="post">
                     <fieldset>
                         <legend for="frosting">Select Frosting:</legend>
                         <select name="frosting" id="frosting">
@@ -35,7 +33,6 @@
 
             <div>
                 <h2>Type of Toppings:</h2>
-                <form action="{{ url_for('toppings_to_cart') }}" method="post">
                     <fieldset>
                         <legend>Select Toppings:</legend>
                         {% for topping, details in toppings.items() %}
