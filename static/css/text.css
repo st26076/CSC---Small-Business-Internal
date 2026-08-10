@@ -1,14 +1,55 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-h1 {
-    font-family: "Lobster", sans-serif;
-    font-weight: 400;
-    font-style: normal;
+body {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    color: #5c3b32;
 }
 
+/* Main headings */
+h1,
+h2,
+h3 {
+    color: #70483e;
+}
+
+/* Cute main title */
+.main-text {
+    font-family: cursive;
+}
+
+/* Section headings */
+h2 {
+    font-size: 1.5rem;
+}
+
+/* Normal text */
 p {
-    font-family: "PT Sans", sans-serif;
-    font-weight: 400;
-    font-style: normal;
+    line-height: 1.6;
+}
+
+/* Cart labels */
+.cart {
+    display: inline;
+    font-weight: bold;
+    color: #a96868;
+}
+
+/* Subtotal and total */
+.subtotal {
+    font-weight: bold;
+    color: #7a4e43;
+}
+
+h4 {
+    text-align: right;
+    font-size: 1.5rem;
+    color: #8d554a;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 25px;
+    margin-top: 50px;
+    background-color: #f4d6d6;
+    color: #70483e;
 }
