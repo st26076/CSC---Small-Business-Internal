@@ -1,0 +1,31 @@
+/* Cart section */
+.cart {
+    background-color: #fff;
+    border: 2px solid #f0d2d2;
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: 40px;
+    box-shadow: 0 4px 10px rgba(120, 75, 60, 0.1);
+}
+
+/* Individual cart items */
+.cart li {
+    list-style: none;
+    background-color: #fff8f5;
+    border-radius: 15px;
+    padding: 18px;
+    margin: 12px 0;
+}
+
+/* Remove link */
+.cart a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #b56b6b;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cart a:hover {
+    color: #7d4545;
+}
