@@ -1,16 +1,82 @@
+/* Whole page */
 body {
-    margin: none;
+    margin: 0;
+    background-color: #fff8f5;
 }
 
+/* Main content */
+main {
+    width: 85%;
+    max-width: 1100px;
+    margin: 40px auto;
+}
+
+/* Cookie selection area */
 .layout {
     display: flex;
-    align-items: center;
-    gap: 150px;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+    margin: 30px 0;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid #f3d2d2;
+    box-shadow: 0 4px 10px rgba(120, 75, 60, 0.1);
+    flex: 1;
 }
 
-.about-image {
-    height: 250px;
-    width: auto;
-    margin-right: 20px;
+/* Dropdown */
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e8bebe;
+    border-radius: 12px;
+    background-color: #fff8f5;
+    color: #5c3b32;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+legend {
+    color: #7a4e43;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+label:hover {
+    background-color: #fff0f0;
+}
+
+/* Checkboxes */
+input[type="checkbox"] {
+    accent-color: #d98c9b;
+    margin-right: 8px;
+}
+
+/* Button */
+button {
+    display: block;
+    margin: 25px auto;
+    padding: 13px 30px;
+    border: none;
+    border-radius: 20px;
+    background-color: #b87568;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(120, 75, 60, 0.2);
+}
+
+button:hover {
+    background-color: #965b50;
+    transform: translateY(-2px);
 }
 
