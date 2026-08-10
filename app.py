@@ -25,9 +25,10 @@ def initialise_database():
 @app.route('/')
 def index():
     cookies, frostings, toppings = load_data()
-    selected_toppings = session.get('selected_toppings')
     cart = session.get('cart', [])
-    return render_template('index.html', cookies=cookies, frostings=frostings, toppings=toppings, selected_toppings=selected_toppings, cart=cart)
+    total_before_discount = sum(cookie_item['price'] for cookie_item in cart)
+    total_price = sum(item['price'] for item in cart)
+    return render_template('index.html', cookies=cookies, frostings=frostings, toppings=toppings, cart=cart, total_before_discount=total_before_discount, total_price=total_price)
 
 def load_data():
     try:
@@ -48,7 +49,7 @@ def cookie_item():
     frosting = request.form['frosting']
     selected_toppings = request.form.getlist('toppings')
     cookies, frostings, toppings = load_data()
-    cart = session.get('cart', {})
+    cart = session.get('cart', [])
 
     if cookie not in cookies:
         flash("Invalid cookie selected")
@@ -56,8 +57,9 @@ def cookie_item():
     if frosting not in frostings:
         flash("Invalid frosting selected")
         return redirect(url_for('index'))
-    if selected_toppings not in toppings:
-            flash("Invalid toppings selected")
+    for topping in selected_toppings:
+        if topping not in toppings:
+            flash("Invalid topping selected")
             return redirect(url_for('index'))
 
 
@@ -78,6 +80,8 @@ def cookie_item():
     session.modified = True
     flash(f"Your Unique Cookie, {cookie_item}, has been added to cart")
     return redirect(url_for('index'))
+
+
 
 
 @app.route('/about')
