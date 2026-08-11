@@ -52,19 +52,25 @@ nav {
 
 nav ul {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     gap: 35px;
     list-style: none;
     padding: 15px;
     margin: 0;
+    margin-right: 40px;
+    margin-left: 40px;
 }
 
 nav a {
     color: #6b453b;
     text-decoration: none;
     font-weight: bold;
+    font-size: 15px;
 }
 
 nav a:hover {
     color: #c77d8a;
+    transition: ease-in;
+    transition-duration: 0.5s;
+    font-size: 16.5px;
 }
