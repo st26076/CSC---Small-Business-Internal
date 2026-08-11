@@ -53,11 +53,13 @@
                     <p class="cart">Cookie: </p>{{ cookie_item['cookie'] }}<br>
                     <p class="cart">Frosting: </p>{{ cookie_item['frosting'] }}<br>
                     <p class="cart">Toppings: </p>{{ cookie_item['selected_toppings'] | join(', ') }}<br>
-                    <p class="cart">Cookie Price: </p> ${{ '%.2f' % cookie_item['price'] }}
+                    <p class="cart">Cookie Price: </p> ${{ '%.2f' % cookie_item['price'] }}<br>
+                    <a href="{{url_for('remove', cookie_item=loop.index0) }}">[Remove cookie from cart]</a>
                 </li>
             {% endfor %}
             <br>
         </ul>
+
         <li class="subtotal">Subtotal= ${{ '%.2f' % total_before_discount }}</li>
     {% else %}
         <p>Your cart is empty.</p>
@@ -65,13 +67,18 @@
 
     <h4>Total: ${{ '%.2f' % total_price }}</h4>
 
-    <form action="{{ url_for('cancel_order') }}" method="post"> 
+    <form action="{{ url_for('order_history') }}" method="post"> 
         <h3>Collection Method</h3> 
         <label><input type="radio" name="collection_method" value="Pickup" required>Pickup</label> 
         <label><input type="radio" name="collection_method" value="Delivery">Delivery</label> 
-        <label for="customer_name_checkout">Your Name:</label> 
+        <br>
+        <h3>Your Name:</h3> 
         <input type="text" name="customer_name" id="customer_name_checkout" required> 
-        <button type="submit" formaction="{{ url_for('checkout') }}">Checkout</button> 
-        <button type="submit" formaction="{{ url_for('cancel_order') }}" onclick="return confirm('Are you sure you want to cancel your order? This will remove everything in your cart.')">Cancel Order</button> 
+        <h3>Phone Number:</h3>
+        <input type="text" name="customer_phone_number" id="customer_phone_number_checkout" required>
+        <h3>Email Address:</h3>
+        <input type="text" name="customer_email" id="customer_email_checkout" required>
+        <button type="submit" formaction="{{ url_for('about') }}">Checkout</button> 
+        <button type="submit" formaction="{{ url_for('order_history') }}" onclick="return confirm('Are you sure you want to cancel your order? This will remove everything in your cart.')">Cancel Order</button> 
     </form>
 {% endblock %}
