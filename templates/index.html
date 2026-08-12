@@ -10,6 +10,7 @@
                     <fieldset>
                         <legend for="cookie">Select Cookie:</legend>
                         <select name="cookie" id="cookie">
+                            <option value="">Select Cookie Base</option>
                             {% for cookie, details in cookies.items() %}
                             <option value="{{ cookie }}">{{ cookie }} - ${{ details['price'] }}</option>
                             {% endfor %}
@@ -22,6 +23,7 @@
                     <fieldset>
                         <legend for="frosting">Select Frosting:</legend>
                         <select name="frosting" id="frosting">
+                            <option value="">Select Frosting Flavour</option>
                             {% for frosting, details in frostings.items() %}
                             <option value="{{ frosting }}">{{ frosting }} - ${{ details['price'] }}</option>
                             {% endfor %}
@@ -45,20 +47,39 @@
         <button type="submit">Add to cart</button>
     </form>
 
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+
     <h2>Cart:</h2>
     {% if cart %}
-        <ul>
+        <table>
+            <tr>
+                <th>Cookie Base:</th>
+                <th>Frosting Flavour:</th>
+                <th>Type of Topping:</th>
+                <th>Price of Cookie:</th>
+                <th> </th>
+            </tr>
             {% for cookie_item in cart %}
-                <li>
-                    <p class="cart">Cookie: </p>{{ cookie_item['cookie'] }}<br>
-                    <p class="cart">Frosting: </p>{{ cookie_item['frosting'] }}<br>
-                    <p class="cart">Toppings: </p>{{ cookie_item['selected_toppings'] | join(', ') }}<br>
-                    <p class="cart">Cookie Price: </p> ${{ '%.2f' % cookie_item['price'] }}<br>
-                    <a href="{{url_for('remove', cookie_item=loop.index0) }}">[Remove cookie from cart]</a>
-                </li>
+                <tr>
+                    <td>{{ cookie_item['cookie'] }}</td>
+                    <td>{{ cookie_item['frosting'] }}</td>
+                    <td>{{ cookie_item['selected_toppings'] | join(', ') }}</td>
+                    <td>${{ '%.2f' % cookie_item['price'] }}</td>
+                    <td><a href="{{url_for('remove', cookie_item=loop.index0) }}">[Remove]</a></td>
+                </tr>
             {% endfor %}
-            <br>
-        </ul>
+        </table>
+        <br>
+
 
         <li class="subtotal">Subtotal= ${{ '%.2f' % total_before_discount }}</li>
     {% else %}
