@@ -52,10 +52,10 @@ def cookie_item():
     cart = session.get('cart', [])
 
     if cookie not in cookies:
-        flash("Invalid cookie selected")
+        flash("Invalid cookie selected - Please choose one of the following Cookie Bases")
         return redirect(url_for('index'))
     if frosting not in frostings:
-        flash("Invalid frosting selected")
+        flash("Invalid frosting selected - Please choose one of the following Frosting Flavours")
         return redirect(url_for('index'))
     for topping in selected_toppings:
         if topping not in toppings:
@@ -78,7 +78,7 @@ def cookie_item():
     cart.append(cookie_item)
     session['cart'] = cart
     session.modified = True
-    flash(f"Your Unique Cookie, {cookie_item}, has been added to cart")
+    flash(f"Your Unique Cookie {cookie, frosting, selected_toppings}, has been added to cart")
     return redirect(url_for('index'))
 
 @app.route('/remove/<int:cookie_item>')
@@ -89,7 +89,7 @@ def remove(cookie_item):
         cart.pop(cookie_item)
         session['cart'] = cart
         session.modified = True
-        flash("Cookie removed from cart.")
+        flash(f"Cookie removed from cart.")
     else:
         flash("Cookie not found in cart")
 
