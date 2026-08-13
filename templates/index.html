@@ -36,10 +36,7 @@
                     <fieldset>
                         <legend>Select Toppings:</legend>
                         {% for topping, details in toppings.items() %}
-                            <label>
-                                <input type="checkbox" name="toppings" value="{{ topping }}">
-                                <li>{{ topping }} (${{ details['price'] }})</li>
-                            </label>
+                            <label><input type="checkbox" name="toppings" value="{{ topping }}">{{ topping }} (${{ details['price'] }})</label>
                         {% endfor %}
                     </fieldset>
             </div>
@@ -96,10 +93,10 @@
         <h3>Your Name:</h3> 
         <input type="text" name="customer_name" id="customer_name_checkout" required> 
         <h3>Phone Number:</h3>
-        <input type="text" name="customer_phone_number" id="customer_phone_number_checkout" required>
+        <input type="text" name="customer_number" id="customer_number_checkout" required>
         <h3>Email Address:</h3>
         <input type="text" name="customer_email" id="customer_email_checkout" required>
-        <button type="submit" formaction="{{ url_for('about') }}">Checkout</button> 
+        <button type="submit" formaction="{{ url_for('checkout') }}">Checkout</button> 
         <button type="submit" formaction="{{ url_for('order_history') }}" onclick="return confirm('Are you sure you want to cancel your order? This will remove everything in your cart.')">Cancel Order</button> 
     </form>
 {% endblock %}
