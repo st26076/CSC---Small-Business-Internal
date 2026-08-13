@@ -11,13 +11,15 @@ def initialise_database():
         cursor = conn.cursor()
         cursor.execute('''
                         CREATE TABLE IF NOT EXISTS orders (
-                        order_id INTERGER PRIMARY KEY AUTOINCREMENT,
+                        order_id INTEGER PRIMARY KEY AUTOINCREMENT,
                         invoice_number TEXT,
                         customer_name TEXT,
-                        items TEXT,
+                        customer_number TEXT,
+                        customer_email TEXT,
+                        cookie_items TEXT,
                         frosting TEXT,
                         toppings TEXT,
-                        total REAL,
+                        total_price REAL,
                         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         )
                         ''')
@@ -26,8 +28,8 @@ def initialise_database():
 def index():
     cookies, frostings, toppings = load_data()
     cart = session.get('cart', [])
-    total_before_discount = sum(cookie_item['price'] for cookie_item in cart)
     total_price = sum(item['price'] for item in cart)
+    total_price, total_before_discount = calculate_total(cart)
     return render_template('index.html', cookies=cookies, frostings=frostings, toppings=toppings, cart=cart, total_before_discount=total_before_discount, total_price=total_price)
 
 def load_data():
@@ -62,17 +64,16 @@ def cookie_item():
             flash("Invalid topping selected")
             return redirect(url_for('index'))
 
-
-    total_price = cookies[cookie]['price']
-    total_price += frostings[frosting]['price']
+    price_of_cookie = cookies[cookie]['price']
+    price_of_cookie += frostings[frosting]['price']
     for topping in selected_toppings:
-        total_price += toppings[topping]['price']
+        price_of_cookie += toppings[topping]['price']
 
     cookie_item = {
         "cookie": cookie,
         "frosting": frosting,
         "selected_toppings": selected_toppings,
-        "price": total_price
+        "price": price_of_cookie
     }
 
     cart.append(cookie_item)
@@ -80,6 +81,16 @@ def cookie_item():
     session.modified = True
     flash(f"Your Unique Cookie {cookie, frosting, selected_toppings}, has been added to cart")
     return redirect(url_for('index'))
+
+def calculate_total(cart):
+    total_before_discount = sum(cookie_item['price'] for cookie_item in cart)
+
+    total_price = total_before_discount
+
+    if total_price > 20:
+        total_price = total_price * 0.9
+
+    return total_price, total_before_discount
 
 @app.route('/remove/<int:cookie_item>')
 def remove(cookie_item):
@@ -94,6 +105,65 @@ def remove(cookie_item):
         flash("Cookie not found in cart")
 
     return redirect(url_for('index'))
+
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    customer_name = request.form['customer_name'].strip().title()
+    if not customer_name:
+        flash("Name is required.")
+        return redirect(url_for('index'))
+
+    customer_number = request.form['customer_number'].strip()
+    if not customer_number:
+        flash("Phone Number is required.")
+        return redirect(url_for('index'))
+
+    customer_email = request.form['customer_email'].strip()
+    if not customer_email:
+        flash("Email is required.")
+        return redirect(url_for('index'))
+
+    cart = session.get('cart', [])
+    if not cart:
+        flash("Cart is empty")
+        return redirect(url_for('index'))
+
+    total_price, total_before_discount = calculate_total(cart)    
+    date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    invoice_number = f"INV_NO.{customer_name.replace(' ', '_')}_{date}"
+
+    with sqlite3.connect('unique_cookie.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                           INSERT INTO orders (invoice_number, customer_name, customer_number, customer_email, cookie_items, total_price)
+                           VALUES (?, ?, ?, ?, ?, ?)
+                           ''', (invoice_number, customer_name, customer_number, customer_email, json.dumps(cart), total_price))
+            conn.commit()
+
+
+    invoice_file = f"{invoice_number.replace(':', '-')}.txt"   
+    try: 
+        with open(invoice_file, 'w') as f:
+            f.write("~ Unique Cookie Invoice ~\n\n")
+            f.write(f"Invoice Number: {invoice_number}\n")
+            f.write(f"Customer Name: {customer_name}\n")
+            f.write(f"Customer Phone Number: {customer_number}\n")
+            f.write(f"Customer Email: {customer_email}\n")
+            f.write(f"Date: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
+            f.write("Cookies Ordered:\n")
+            for cookie_item in cart():
+                f.write(f"-{cookie_item['cookie']}: details['price']:.2f\n")
+            for cookie_item in cart:
+                if cookie_item['selected_toppings']:
+                    f.write("\nToppings:\n")
+                    for topping in cookie_item['selected_toppings']:
+                        f.write(f"- {topping}\n")
+            f.write(f"\nTotal: ${total_price:.2f}\n")
+
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error writing invoice: {e}")
+    return render_template('invoice.html', customer_name=customer_name, customer_number=customer_number, customer_email=customer_email, total_price=total_price, total_before_discount=total_before_discount, date=date, invoice_number=invoice_number, cart=cart, invoice_file=invoice_file)
 
 
 @app.route('/about')
@@ -112,4 +182,5 @@ def invoice():
 
 
 if __name__ == '__main__':
+    initialise_database()
     app.run(debug=True)
