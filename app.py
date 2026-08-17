@@ -84,12 +84,9 @@ def cookie_item():
 
 def calculate_total(cart):
     total_before_discount = sum(cookie_item['price'] for cookie_item in cart)
-
     total_price = total_before_discount
-
     if total_price > 20:
         total_price = total_price * 0.9
-
     return total_price, total_before_discount
 
 @app.route('/remove/<int:cookie_item>')
@@ -103,7 +100,6 @@ def remove(cookie_item):
         flash(f"Cookie removed from cart.")
     else:
         flash("Cookie not found in cart")
-
     return redirect(url_for('index'))
 
 
@@ -152,11 +148,9 @@ def checkout():
             f.write(f"Customer Email: {customer_email}\n")
             f.write(f"Date: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
             f.write("Cookies Ordered:\n")
-            for cookie_item in cart():
-                f.write(f"-{cookie_item['cookie']}: details['price']:.2f\n")
             for cookie_item in cart:
+                f.write(f"- {cookie_item['cookie']}: ${cookie_item['price']:.2f}\n")
                 if cookie_item['selected_toppings']:
-                    f.write("\nToppings:\n")
                     for topping in cookie_item['selected_toppings']:
                         f.write(f"- {topping}\n")
             f.write(f"\nTotal: ${total_price:.2f}\n")
