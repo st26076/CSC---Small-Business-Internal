@@ -11,19 +11,35 @@
         <p>Email: {{ customer_email }}</p>
         <p>Date: {{ date }}</p>
 
-        <h2>Cookie/s:</h2>
+        <h2>Cookie/s Order:</h2>
         <ul>
-            {% for details in cart %}
+            {% for cookie_item in cart %}
                 <li>
-                    {{ cart }}:
-                    = ${{ '%.2f' % (details['price']) }}
+                    Cookie Base: {{ cookie_item['cookie'] }}
+                    <br>
+                    Frosting: {{ cookie_item['frosting'] }}
+                    <br>
+                    Toppings: {{ cookie_item['selected_toppings'] | join(', ') }}
+                    <br>
+                    Price: ${{ '%.2f' | format(cookie_item['price']) }}                
                 </li>
+            <br>
             {% endfor %}
         </ul>
 
         <h2>Summary:</h2>
         <p>Subtotal: {{ '%.2f' % total_before_discount }}</p>
-        <p>10% Discount applied</p>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
         <h2>Total: ${{ '%.2f' % total_price }}</h2>
         <p>Thank you for shopping at Unique Cookie and supporting our small business!</p>
     </div>
