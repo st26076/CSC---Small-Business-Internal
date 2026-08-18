@@ -87,6 +87,7 @@ def calculate_total(cart):
     total_price = total_before_discount
     if total_price > 20:
         total_price = total_price * 0.9
+        flash("10% Discount Applied")
     return total_price, total_before_discount
 
 @app.route('/remove/<int:cookie_item>')
@@ -122,7 +123,7 @@ def checkout():
 
     cart = session.get('cart', [])
     if not cart:
-        flash("Cart is empty")
+        flash("Cart is empty. Please add cookies into the cart to purchase.")
         return redirect(url_for('index'))
 
     total_price, total_before_discount = calculate_total(cart)    
