@@ -3,6 +3,41 @@
 {% block title %}Order History - Unique Cookies{% endblock %}
 
 {% block content %}
+        <h2>Order History: </h2>
 
-
+        {% if orders %}
+        <table class="order_history">
+            <thead>
+                <tr>
+                    <th>Invoice Number</th>
+                    <th>Customer Details</th>
+                    <th>Cookies Order</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order['invoice_number'] }}</td>
+                        <td><strong>Customer Name: {{ order['customer_name'] }} </strong><br><strong>Customer Number:</strong> {{ order['customer_number'] }} <br><strong>Customer Email:</strong> {{ order['customer_email'] }}</td>
+                        <td class="cookie-details">
+                            {% for cookie_item in order['cookie_items'] %}
+                                <div class="cookie-item">
+                                    {{ cookie_item['cookie'] }}<br>    - Frosting: {{ cookie_item['frosting'] }}<br>{% if cookie_item['selected_toppings'] %}    - Toppings: {{ cookie_item['selected_toppings'] | join(', ') }}{% endif %}<br><strong>Price:</strong>${{ '%.2f' % cookie_item['price'] }}
+                                </div>
+                                <br>
+                            {% endfor %}
+                        </td>
+                        <td>${{ '%.2f' % order['total_price'] }}
+                            <form action="{{ url_for('cancel_order', order_id=order.order_id) }}" method="post" onsubmit="return confirm ('Cancel this order?');">
+                                <button type="submit">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No past orders found.</p>
+    {% endif %}
 {% endblock %}
