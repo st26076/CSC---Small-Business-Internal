@@ -17,8 +17,6 @@ def initialise_database():
                         customer_number TEXT,
                         customer_email TEXT,
                         cookie_items TEXT,
-                        frosting TEXT,
-                        toppings TEXT,
                         total_price REAL,
                         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         )
@@ -79,7 +77,7 @@ def cookie_item():
     cart.append(cookie_item)
     session['cart'] = cart
     session.modified = True
-    flash(f"Your Unique Cookie {cookie, frosting, selected_toppings}, has been added to cart")
+    flash(f"Your Unique Cookie {cookie, frosting, selected_toppings}, has been added to cart. ")
     return redirect(url_for('index'))
 
 def calculate_total(cart):
@@ -160,6 +158,12 @@ def checkout():
         print(f"Error writing invoice: {e}")
     return render_template('invoice.html', customer_name=customer_name, customer_number=customer_number, customer_email=customer_email, total_price=total_price, total_before_discount=total_before_discount, date=date, invoice_number=invoice_number, cart=cart, invoice_file=invoice_file)
 
+@app.route('/cancel', methods=['POST'])
+def cancel():
+    session.pop('cart', None)
+    session.modified = True
+    flash("Order cancelled. Your cart has been emptied")
+    return redirect(url_for('index'))
 
 @app.route('/about')
 def about():
@@ -168,12 +172,28 @@ def about():
 
 @app.route('/order_history')
 def order_history():
-    return render_template('order_history.html')
+    with sqlite3.connect('unique_cookie.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM orders ORDER BY date DESC")
+        rows = cursor.fetchall()
+        orders = []
+        for row in rows:
+            orders.append ({'order_id': row[0],'invoice_number': row[1], 'customer_name': row [2], 'customer_number': row[3], 'customer_email': row[4], 'cookie_items': json.loads(row[5]), 'total_price': row[6], 'date': row[7] })
+    return render_template('order_history.html', orders=orders)
 
+@app.route('/cancel_order/<int:order_id>', methods=['POST'])
+def cancel_order(order_id):
+    with sqlite3.connect('unique_cookie.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM orders WHERE order_id = ?", (order_id,))
+        conn.commit()
+    flash("Order Cancelled.")
+    return redirect(url_for('order_history'))
 
 @app.route('/invoice')
 def invoice():
     return render_template('/invoice.html')
+
 
 
 if __name__ == '__main__':
