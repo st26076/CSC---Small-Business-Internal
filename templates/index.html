@@ -85,7 +85,7 @@
 
     <h4>Total: ${{ '%.2f' % total_price }}</h4>
 
-    <form action="{{ url_for('order_history') }}" method="post"> 
+    <form action="{{ url_for('checkout') }}" method="post"> 
         <h3>Collection Method</h3> 
         <label><input type="radio" name="collection_method" value="Pickup" required>Pickup</label> 
         <label><input type="radio" name="collection_method" value="Delivery">Delivery</label> 
@@ -97,6 +97,8 @@
         <h3>Email Address:</h3>
         <input type="text" name="customer_email" id="customer_email_checkout" required>
         <button type="submit" formaction="{{ url_for('checkout') }}">Checkout</button> 
-        <button type="submit" formaction="{{ url_for('order_history') }}" onclick="return confirm('Are you sure you want to cancel your order? This will remove everything in your cart.')">Cancel Order</button> 
+    </form>
+    <form action="{{ url_for('cancel') }}" method="post">
+        <button type="submit" formaction="{{ url_for('cancel') }}" onclick="return confirm('Are you sure you want to cancel your order? This will remove everything in your cart.')">Cancel Order</button> 
     </form>
 {% endblock %}
